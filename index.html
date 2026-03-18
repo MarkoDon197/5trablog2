@@ -1,319 +1,1389 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="sl">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>TravelBlog Pro v3</title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-<style>
-*{box-sizing:border-box;margin:0;padding:0;font-family:Poppins,sans-serif}
-body{background:#f4f7fb;color:#333;transition:.3s}
-body.dark{background:#121212;color:#eee}
-nav{background:white;padding:16px 24px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 2px 10px rgba(0,0,0,.05);position:sticky;top:0;z-index:10}
-body.dark nav{background:#1e1e1e}
-.logo{font-weight:600}
-.menu{display:flex;gap:16px}
-.menu a{cursor:pointer;text-decoration:none;color:inherit}
-.hamburger{display:none;font-size:22px;cursor:pointer}
-@media(max-width:700px){
-.menu{display:none;flex-direction:column;position:absolute;top:60px;right:20px;background:white;padding:15px;border-radius:10px}
-.menu.open{display:flex}
-.hamburger{display:block}
-}
-header{padding:90px 20px;background:url("https://images.unsplash.com/photo-1469474968028-56623f02e42e") center/cover;color:white;text-align:center}
-header h1{font-size:44px}
-.container{max-width:1100px;margin:auto;padding:40px 20px}
-.search input{width:100%;padding:10px;border-radius:8px;border:1px solid #ddd;margin:20px 0}
-.filters{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px}
-.filters button{padding:6px 10px;border:none;border-radius:8px;background:#ddd;cursor:pointer}
-.blog-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:25px}
-.card{background:white;border-radius:14px;overflow:hidden;box-shadow:0 6px 18px rgba(0,0,0,.08);cursor:pointer}
-.card img{width:100%;height:180px;object-fit:cover}
-body.dark .card{background:#1f1f1f}
-.card-content{padding:20px}
-.meta{font-size:12px;color:#888;margin-bottom:6px}
-.tags{font-size:12px;color:#2d7ef7;margin-top:6px}
-.pagination{display:flex;justify-content:center;gap:10px;margin-top:30px}
-.pagination button{padding:6px 10px;border:none;border-radius:8px;background:#2d7ef7;color:white;cursor:pointer}
-.post-modal{position:fixed;inset:0;background:rgba(0,0,0,.7);display:none;overflow:auto;padding:40px}
-.post-box{max-width:900px;margin:auto;background:white;border-radius:14px;padding:30px}
-body.dark .post-box{background:#1f1f1f}
-.gallery{display:flex;gap:10px;flex-wrap:wrap;margin-top:15px}
-.gallery img{width:100px;height:100px;object-fit:cover;border-radius:6px;cursor:pointer}
-.lightbox{position:fixed;inset:0;background:rgba(0,0,0,.9);display:none;align-items:center;justify-content:center}
-.lightbox img{max-width:90%;max-height:90%}
-.post-comments{margin-top:30px}
-.comment{background:#f1f3f7;padding:10px;border-radius:8px;margin-top:8px}
-body.dark .comment{background:#2a2a2a}
-.admin{display:none;margin-top:40px}
-form{display:flex;flex-direction:column;gap:10px}
-input,textarea{padding:10px;border-radius:8px;border:1px solid #ddd}
-.toolbar{display:flex;gap:6px;flex-wrap:wrap}
-.toolbar button{padding:6px 10px;border:none;border-radius:6px;background:#eee;cursor:pointer}
-.editor{min-height:160px;border:1px solid #ddd;border-radius:8px;padding:10px;background:white}
-body.dark .editor{background:#1f1f1f;color:#eee}
-.modal{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center}
-.modal-box{background:white;padding:25px;border-radius:12px;width:320px}
-footer{text-align:center;padding:30px;margin-top:60px;background:white}
-body.dark footer{background:#1e1e1e}
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>5traTravels WordPress-like Editor</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#eef4fb;
+      --surface:#ffffff;
+      --surface-2:#f7faff;
+      --text:#18212f;
+      --muted:#607086;
+      --line:#dde7f3;
+      --primary:#2563eb;
+      --primary-2:#1d4ed8;
+      --danger:#dc2626;
+      --shadow:0 10px 30px rgba(22,34,58,.10);
+      --max:1180px;
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{
+      font-family:Poppins,sans-serif;
+      background:linear-gradient(180deg,#f6f9fe 0%, var(--bg) 100%);
+      color:var(--text);
+      min-height:100vh;
+    }
+    a{color:inherit;text-decoration:none}
+    img{max-width:100%;display:block}
+    button,input,select{font:inherit}
+    .wrap{max-width:var(--max);margin:0 auto;padding:0 20px}
+    .topbar{
+      position:sticky;top:0;z-index:50;
+      backdrop-filter:blur(14px);
+      background:rgba(255,255,255,.84);
+      border-bottom:1px solid rgba(221,231,243,.9);
+    }
+    .nav{height:74px;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:16px}
+    .nav-left{display:flex;align-items:center;gap:10px;flex-wrap:nowrap}
+    .nav-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end}
+    .nav-center{display:flex;justify-content:center;align-items:center;gap:18px}
+    .social-link{display:flex;align-items:center;justify-content:center;width:42px;height:42px;border-radius:999px;background:#f3f7ff;border:1px solid var(--line);transition:.2s transform,.2s background}
+    .social-link:hover{transform:translateY(-2px);background:#e8f0ff}
+    .brand-center{font-weight:700;font-size:1.15rem;letter-spacing:.2px;white-space:nowrap}
+
+    .btn{
+      border:none;border-radius:999px;padding:11px 16px;cursor:pointer;
+      transition:.2s transform,.2s opacity,.2s background,.2s box-shadow;
+    }
+    .btn:hover{transform:translateY(-1px)}
+    .btn-primary{background:var(--primary);color:#fff}
+    .btn-primary:hover{background:var(--primary-2)}
+    .btn-secondary{background:#e8f0ff;color:#1d4ed8}
+    .btn-ghost{background:transparent;color:var(--text);border:1px solid var(--line)}
+    .btn-danger{background:var(--danger);color:#fff}
+    .btn-sm{padding:8px 12px;font-size:.92rem;border-radius:12px}
+
+    .hero{
+      position:relative;overflow:hidden;margin:24px auto 0;border-radius:28px;min-height:420px;
+      background:
+        linear-gradient(90deg,rgba(10,18,33,.72),rgba(10,18,33,.35)),
+        url('https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=1600&q=80') center/cover;
+      box-shadow:var(--shadow)
+    }
+    .hero-inner{min-height:420px;display:flex;align-items:center;justify-content:center;padding:48px;text-align:center}
+    .hero-copy{max-width:680px;color:#fff;margin:auto}
+    .hero h1{font-size:clamp(2.2rem,5vw,4.2rem);line-height:1.02;margin-bottom:14px}
+    .hero p{font-size:1.05rem;color:rgba(255,255,255,.92);max-width:560px}
+
+    .section{padding:34px 0}
+    .section-head{display:flex;justify-content:space-between;align-items:end;gap:16px;margin-bottom:20px;flex-wrap:wrap}
+    .section-title h2{font-size:1.7rem}
+    .admin,.filters,.stats,.modal-box,.post-shell,.card,.toolbar-card,.editor-shell{
+      background:var(--surface);border:1px solid var(--line);box-shadow:var(--shadow)
+    }
+    .filters{border-radius:22px;padding:16px;display:grid;grid-template-columns:1.5fr .9fr .8fr auto;gap:12px;align-items:center}
+    .input,.select{
+      width:100%;padding:14px 16px;border:1px solid var(--line);border-radius:14px;
+      background:#fff;outline:none;transition:border-color .2s, box-shadow .2s
+    }
+    .input:focus,.select:focus{border-color:#93c5fd;box-shadow:0 0 0 4px rgba(37,99,235,.10)}
+
+    .stats{border-radius:22px;padding:18px;display:flex;gap:14px;flex-wrap:nowrap;overflow-x:auto}
+    .stat{flex:1 1 0;min-width:180px;padding:8px 10px;border-radius:16px;background:var(--surface-2);border:1px solid #edf3fb}
+    .stat strong{display:block;font-size:1.35rem}
+    .stat span{color:var(--muted);font-size:.92rem}
+
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px}
+    .card{border-radius:22px;overflow:hidden;cursor:pointer;display:flex;flex-direction:column;transition:transform .18s ease, box-shadow .18s ease}
+    .card:hover{transform:translateY(-4px)}
+    .card-media{position:relative;aspect-ratio:16/10;overflow:hidden;background:#e9eef6}
+    .card-media img{width:100%;height:100%;object-fit:cover;transition:transform .35s ease}
+    .card:hover .card-media img{transform:scale(1.04)}
+    .chip{position:absolute;left:14px;top:14px;background:rgba(255,255,255,.92);backdrop-filter:blur(10px);color:#0f172a;padding:8px 12px;border-radius:999px;font-size:.84rem;font-weight:600}
+    .card-body{padding:18px;display:flex;flex-direction:column;gap:10px;flex:1}
+    .meta{display:flex;justify-content:space-between;gap:10px;color:var(--muted);font-size:.86rem;flex-wrap:wrap}
+    .card h3{font-size:1.15rem;line-height:1.35}
+    .excerpt{color:var(--muted);font-size:.95rem;line-height:1.6}
+    .admin-row{display:flex;gap:8px;flex-wrap:wrap;padding-top:4px}
+
+    .empty{padding:46px 20px;text-align:center;border-radius:24px;background:var(--surface);border:1px dashed #cdd9ea;color:var(--muted)}
+    .admin{margin-top:28px;border-radius:26px;padding:24px}
+    .admin-head{display:flex;justify-content:space-between;gap:14px;align-items:center;flex-wrap:wrap;margin-bottom:18px}
+    .admin-title p{color:var(--muted);margin-top:4px}
+    .admin-layout{display:grid;grid-template-columns:1.2fr .8fr;gap:18px}
+    .panel{background:var(--surface-2);border:1px solid #e5eef8;border-radius:20px;padding:18px}
+    .field{margin-bottom:14px}
+    .label{display:block;font-weight:600;margin-bottom:8px}
+
+    .editor-shell{border-radius:18px;overflow:hidden}
+    .toolbar-card{padding:10px;display:flex;gap:8px;flex-wrap:wrap;border:0;border-bottom:1px solid var(--line);box-shadow:none}
+    .toolbar-divider{width:1px;background:var(--line);margin:4px 2px}
+    .tool-btn,.tool-select{
+      border:1px solid var(--line);
+      background:#fff;
+      border-radius:12px;
+      padding:8px 12px;
+      cursor:pointer;
+      min-height:40px;
+    }
+    .tool-btn:hover,.tool-select:hover{background:#f7fbff}
+    .tool-select{padding-right:28px}
+
+    #editor{
+      min-height:420px;background:white;padding:18px;outline:none;line-height:1.7;
+    }
+    #editor:empty:before{content:attr(data-placeholder);color:var(--muted)}
+    #editor h2,#editor h3,#editor p,#editor ul,#editor ol,#editor blockquote{margin:0 0 14px}
+    #editor blockquote{border-left:4px solid #bfdbfe;padding-left:14px;color:#334155}
+    #editor a{color:#1d4ed8;text-decoration:underline}
+    #editor .wp-image-wrap{
+      display:block;
+      position:relative;
+      width:100%;
+      max-width:100%;
+      vertical-align:top;
+      margin:12px 0;
+      cursor:grab;
+    }
+    #editor .wp-image-wrap.dragging{
+      opacity:.45;
+      cursor:grabbing;
+    }
+    #editor .wp-image-wrap img{
+      display:block;
+      width:100%;
+      height:auto;
+      border-radius:14px;
+      user-select:none;
+      pointer-events:none;
+    }
+    #editor .wp-image-wrap.selected{
+      outline:3px solid #93c5fd;
+      border-radius:16px;
+    }
+    #editor .wp-image-wrap.align-left{float:left;margin:8px 18px 14px 0}
+    #editor .wp-image-wrap.align-right{float:right;margin:8px 0 14px 18px}
+    #editor .wp-image-wrap.align-center{display:block;margin:14px auto}
+    #editor .wp-image-row{
+      display:flex;
+      gap:12px;
+      align-items:flex-start;
+      flex-wrap:nowrap;
+      margin:12px 0;
+    }
+    #editor .wp-image-row .wp-image-wrap{
+      display:inline-block;
+      flex:1 1 0;
+      margin:0;
+    }
+    #editor .resize-handle{
+      position:absolute;
+      width:14px;height:14px;
+      right:-3px;bottom:-3px;
+      background:#2563eb;
+      border:2px solid #fff;
+      border-radius:4px;
+      cursor:nwse-resize;
+      pointer-events:auto;
+    }
+
+    #featuredPreview{
+      border:1px dashed #bfd2eb;min-height:220px;border-radius:18px;background:white;
+      display:grid;place-items:center;overflow:hidden
+    }
+    #featuredPreview img{width:100%;height:220px;object-fit:cover}
+    .featured-placeholder{color:var(--muted);text-align:center;padding:20px}
+    .quick-list{display:grid;gap:10px;max-height:380px;overflow:auto}
+    .mini-post{
+      display:flex;gap:12px;align-items:center;background:white;border:1px solid var(--line);
+      border-radius:16px;padding:10px;cursor:pointer
+    }
+    .mini-post img{width:72px;height:56px;object-fit:cover;border-radius:12px;background:#edf2f7}
+    .mini-post strong{display:block;font-size:.95rem}
+    .mini-post span{color:var(--muted);font-size:.82rem}
+
+    .modal{display:none;position:fixed;inset:0;z-index:100;background:rgba(9,14,26,.68);padding:24px;align-items:center;justify-content:center}
+    .modal-box{width:min(100%,980px);max-height:90vh;overflow:auto;border-radius:26px;padding:22px;position:relative}
+    .modal-box-lg{width:min(100%,1180px)}
+    .close-btn{
+      position:absolute;top:14px;right:14px;width:42px;height:42px;border-radius:50%;border:none;
+      background:#eef4ff;color:#0f172a;font-size:1.25rem;cursor:pointer
+    }
+    .modal-head{margin-bottom:18px;padding-right:54px}
+    .modal-head p{color:var(--muted);margin-top:6px}
+    .post-shell{border-radius:26px;overflow:hidden}
+    .post-cover{height:340px;background:#eaf0f8}
+    .post-cover img{width:100%;height:100%;object-fit:cover}
+    .post-body{padding:28px}
+    .post-body h1{font-size:clamp(2rem,4vw,3rem);line-height:1.08;margin-bottom:10px}
+    .post-meta{display:flex;gap:10px;flex-wrap:wrap;color:var(--muted);margin-bottom:20px}
+    .pill{padding:8px 12px;border-radius:999px;background:#eff6ff;color:#1d4ed8;font-weight:600;font-size:.88rem}
+    .blog-content{font-size:1.02rem;line-height:1.8}
+    .blog-content p,.blog-content ul,.blog-content ol,.blog-content h2,.blog-content h3,.blog-content blockquote{margin:0 0 16px}
+    .blog-content img{border-radius:18px;margin:18px auto;max-width:100%}
+    .blog-content .wp-image-row{display:flex;gap:12px;flex-wrap:wrap;margin:16px 0}
+    .blog-content .wp-image-row .wp-image-wrap{flex:1 1 0;min-width:180px}
+    .blog-content blockquote{border-left:4px solid #bfdbfe;padding-left:16px;color:#334155}
+
+    .media-layout{display:grid;grid-template-columns:260px 1fr;gap:18px}
+    .dropzone{border:2px dashed #bfd2eb;border-radius:20px;padding:18px;background:var(--surface-2)}
+    .dropzone p{color:var(--muted);font-size:.94rem;margin-top:10px}
+    #mediaGrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px}
+    .media-card{border:1px solid var(--line);border-radius:18px;overflow:hidden;background:white}
+    .media-card img{width:100%;height:120px;object-fit:cover;background:#edf2f7;cursor:pointer}
+    .media-actions{display:flex;gap:8px;padding:10px}
+    #pagination{margin-top:20px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+    .footer{padding:26px 0 40px;color:var(--muted);text-align:center}
+    .clearfix::after{content:"";display:block;clear:both}
+
+    @media (max-width:980px){
+      .admin-layout,.media-layout{grid-template-columns:1fr}
+      .filters{grid-template-columns:1fr 1fr}
+    }
+    @media (max-width:680px){
+      .nav{grid-template-columns:1fr;justify-items:center;height:auto;padding:14px 0}
+      .nav-left{justify-content:center}
+      .nav-actions{justify-content:center}
+      .nav-center{flex-wrap:wrap}
+      .hero-inner{padding:28px;min-height:380px}
+      .hero{min-height:380px}
+      .filters{grid-template-columns:1fr}
+      .post-cover{height:220px}
+      .post-body{padding:20px}
+      .modal{padding:12px}
+      #editor .wp-image-row{flex-wrap:wrap}
+    }
+  </style>
 </head>
 <body>
+  <div class="topbar">
+    <div class="wrap nav">
+      <div class="nav-left">
+        <a class="social-link" href="https://facebook.com" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M22 12a10 10 0 1 0-11.56 9.88v-6.99H7.9V12h2.54V9.8c0-2.5 1.5-3.89 3.78-3.89 1.09 0 2.23.2 2.23.2v2.46H15.2c-1.24 0-1.63.77-1.63 1.56V12h2.77l-.44 2.89h-2.33v6.99A10 10 0 0 0 22 12Z"/></svg>
+        </a>
+        <a class="social-link" href="https://twitter.com" target="_blank" rel="noopener noreferrer" aria-label="Twitter">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.9 2H22l-6.77 7.74L23.2 22h-6.25l-4.9-6.4L6.45 22H3.34l7.24-8.28L.8 2h6.4l4.43 5.85L18.9 2Zm-1.1 18h1.73L6.26 3.9H4.4L17.8 20Z"/></svg>
+        </a>
+        <a class="social-link" href="https://youtube.com" target="_blank" rel="noopener noreferrer" aria-label="YouTube">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2 31.7 31.7 0 0 0 0 12a31.7 31.7 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1A31.7 31.7 0 0 0 24 12a31.7 31.7 0 0 0-.5-5.8ZM9.6 15.7V8.3l6.4 3.7-6.4 3.7Z"/></svg>
+        </a>
+      </div>
+      <div class="nav-center">
+        <a href="#top" class="brand-center">5traTravels</a>
+      </div>
+      <div class="nav-actions">
+        <button class="btn btn-ghost" onclick="scrollToSection('blogSection')">Blog</button>
+        <button class="btn btn-secondary" onclick="scrollToSection('adminSection')">Editor</button>
+        <div id="navAuth"></div>
+      </div>
+    </div>
+  </div>
 
-<nav>
-<div class="logo">✈️ 5traTravel</div>
-<div class="hamburger" onclick="toggleMenu()">☰</div>
-<div class="menu" id="menu">
-<a onclick="scrollToId('home')">Home</a>
-<a onclick="scrollToId('blog')">Blog</a>
-<a onclick="openLogin()">Login</a>
-<a onclick="logout()">Logout</a>
-<a onclick="toggleDark()">🌙</a>
-</div>
-</nav>
+  <main id="top" class="wrap">
+    <section class="hero">
+      <div class="hero-inner">
+        <div class="hero-copy">
+          <h1>Explore the world</h1>
+          <p>Travel stories and guides</p>
+        </div>
+      </div>
+    </section>
 
-<header id="home">
-<h1>Explore the World 🌍</h1>
-<p>Travel stories and guides</p>
-</header>
+    <section class="section" id="blogSection">
+      <div class="section-head">
+        <div class="section-title">
+          <h2>Travel blog</h2>
+        </div>
+      </div>
 
-<div class="container">
+      <div class="filters">
+        <input id="searchInput" class="input" placeholder="Išči po naslovu ali vsebini..." oninput="currentPage=1; applyFilters()">
+        <select id="categoryFilter" class="select" onchange="currentPage=1; applyFilters()">
+          <option value="all">Vse kategorije</option>
+        </select>
+        <select id="sortFilter" class="select" onchange="currentPage=1; applyFilters()">
+          <option value="newest">Najnovejše</option>
+          <option value="oldest">Najstarejše</option>
+          <option value="title-asc">Naslov A–Ž</option>
+          <option value="title-desc">Naslov Ž–A</option>
+        </select>
+        <button class="btn btn-ghost" onclick="clearFilters()">Počisti</button>
+      </div>
 
-<section id="blog">
-<h2>Blog Articles</h2>
+      <div class="section" style="padding:18px 0 0">
+        <div class="stats">
+          <div class="stat"><strong id="statPosts">0</strong><span>Objav</span></div>
+          <div class="stat"><strong id="statCategories">0</strong><span>Kategorij</span></div>
+          <div class="stat"><strong id="statMedia">0</strong><span>Medijskih datotek</span></div>
+          <div class="stat"><strong id="statVisible">0</strong><span>Prikazanih rezultatov</span></div>
+        </div>
+      </div>
 
-<div class="search">
-<input id="searchInput" placeholder="Search articles..." oninput="searchPosts(this.value)">
-</div>
+      <div id="posts" class="grid" style="margin-top:20px"></div>
+      <div id="pagination"></div>
+    </section>
 
-<div id="tagFilters" class="filters"></div>
+    <section class="section" id="adminSection">
+      <div class="admin" id="adminPanel">
+        <div class="admin-head">
+          <div class="admin-title">
+            <h2>Admin dashboard</h2>
+            <p>Editor kot WordPress: toolbar, linki, poravnava, resize slik z miško in slike ena poleg druge. Za 2 Col ali 3 Col označi več slik z držanjem Ctrl ali Cmd in klikom.</p>
+          </div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap">
+            <button class="btn btn-secondary" onclick="resetEditor()">Nova objava</button>
+            <button class="btn btn-primary" onclick="savePost()">Objavi / Shrani</button>
+          </div>
+        </div>
 
-<div id="posts" class="blog-grid"></div>
+        <div class="admin-layout">
+          <div class="panel">
+            <div class="field">
+              <label class="label" for="title">Naslov</label>
+              <input id="title" class="input" placeholder="Npr. Vikend pobeg v Dolomite" />
+            </div>
+            <div class="field">
+              <label class="label" for="category">Kategorija</label>
+              <input id="category" class="input" placeholder="Npr. Europe, Guides, City Break" />
+            </div>
+            <div class="field">
+              <label class="label" for="excerpt">Kratek opis</label>
+              <input id="excerpt" class="input" placeholder="Kratek povzetek za kartico in overview." />
+            </div>
+            <div class="field">
+              <label class="label">Editor</label>
+              <div class="editor-shell">
+                <div class="toolbar-card">
+                  <select class="tool-select" onchange="applyBlock(this.value); this.value='';">
+                    <option value="">Format</option>
+                    <option value="p">Paragraph</option>
+                    <option value="h2">H2</option>
+                    <option value="h3">H3</option>
+                    <option value="blockquote">Quote</option>
+                  </select>
+                  <button type="button" class="tool-btn" onclick="formatDoc('bold')"><b>B</b></button>
+                  <button type="button" class="tool-btn" onclick="formatDoc('italic')"><i>I</i></button>
+                  <button type="button" class="tool-btn" onclick="formatDoc('underline')"><u>U</u></button>
+                  <button type="button" class="tool-btn" onclick="applyTextSize('14px')">A-</button>
+                  <button type="button" class="tool-btn" onclick="applyTextSize('18px')">A</button>
+                  <button type="button" class="tool-btn" onclick="applyTextSize('24px')">A+</button>
+                  <div class="toolbar-divider"></div>
+                  <button type="button" class="tool-btn" onclick="formatDoc('insertUnorderedList')">• List</button>
+                  <button type="button" class="tool-btn" onclick="formatDoc('insertOrderedList')">1. List</button>
+                  <button type="button" class="tool-btn" onclick="insertLink()">Link</button>
+                  <button type="button" class="tool-btn" onclick="formatDoc('removeFormat')">Clear</button>
+                  <div class="toolbar-divider"></div>
+                  <button type="button" class="tool-btn" onclick="setSelectedImageWidth('50%')">Img 50%</button>
+                  <button type="button" class="tool-btn" onclick="setSelectedImageWidth('75%')">Img 75%</button>
+                  <button type="button" class="tool-btn" onclick="setSelectedImageWidth('100%')">Img 100%</button>
+                  <button type="button" class="tool-btn" onclick="setImageAlign('left')">Left</button>
+                  <button type="button" class="tool-btn" onclick="setImageAlign('center')">Center</button>
+                  <button type="button" class="tool-btn" onclick="setImageAlign('right')">Right</button>
+                  <button type="button" class="tool-btn" onclick="deleteSelectedImage()">Delete Img</button>
+                  <button type="button" class="tool-btn" onclick="makeImageRow(2)">2 Col</button>
+                  <button type="button" class="tool-btn" onclick="makeImageRow(3)">3 Col</button>
+                  <button type="button" class="tool-btn" onclick="ungroupImageRow()">Ungroup</button>
+                </div>
+                <div id="editor" class="clearfix" contenteditable="true" data-placeholder="Napiši vsebino objave tukaj..."></div>
+              </div>
+            </div>
+          </div>
 
-<div class="pagination" id="pagination"></div>
+          <div class="panel">
+            <div class="field">
+              <label class="label">Featured image</label>
+              <div id="featuredPreview">
+                <div class="featured-placeholder">Ni izbrane slike</div>
+              </div>
+              <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px">
+                <button class="btn btn-secondary" onclick="openMedia()">Odpri media library</button>
+                <button class="btn btn-ghost" onclick="clearFeatured()">Odstrani featured</button>
+              </div>
+            </div>
 
-</section>
+            <div class="field" style="margin-top:18px">
+              <label class="label">Hitri pregled objav</label>
+              <div id="quickPosts" class="quick-list"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
 
-<div class="admin" id="adminPanel">
-<h2>Admin Panel</h2>
-<form onsubmit="addPost(event)">
-<input id="postTitle" placeholder="Title" required>
-<input id="postCategory" placeholder="Category">
-<input id="postTags" placeholder="Tags comma separated">
-<input type="file" id="postImages" multiple>
-<div class="toolbar">
-<button type="button" onclick="format('bold')"><b>B</b></button>
-<button type="button" onclick="format('italic')"><i>I</i></button>
-<button type="button" onclick="format('insertUnorderedList')">• List</button>
-<button type="button" onclick="format('insertOrderedList')">1. List</button>
-<button type="button" onclick="format('formatBlock','h2')">H2</button>
-<button type="button" onclick="addLink()">Link</button>
-<button type="button" onclick="addImageFromURL()">Image URL</button>
-</div>
-<div id="editor" class="editor" contenteditable="true"></div>
-<div style="font-size:12px;color:#777">Tip: drag & drop images or hold Shift+drag to resize.</div>
-<button>Publish Post</button>
-</form>
-</div>
+    <div class="footer">2026 5traTravels</div>
+  </main>
 
-</div>
+  <div id="loginModal" class="modal">
+    <div class="modal-box" style="max-width:460px">
+      <button class="close-btn" onclick="closeLogin()">×</button>
+      <div class="modal-head">
+        <h2>Admin login</h2>
+        <p>Demo prijava za lokalni CMS.</p>
+      </div>
+      <input id="user" class="input" placeholder="Username" />
+      <input id="pass" type="password" class="input" placeholder="Password" style="margin-top:10px" />
+      <p id="loginError" style="color:var(--danger);min-height:24px;margin-top:10px"></p>
+      <button class="btn btn-primary" style="width:100%;margin-top:4px" onclick="doLogin()">Login</button>
+      <div style="font-size:.92rem;color:var(--muted);margin-top:8px">Demo credentials: <strong>admin</strong> / <strong>travel123</strong></div>
+    </div>
+  </div>
 
-<footer>© 2026 TravelBlog</footer>
+  <div id="postModal" class="modal">
+    <div class="modal-box modal-box-lg">
+      <button class="close-btn" onclick="closePost()">×</button>
+      <div id="postContent"></div>
+    </div>
+  </div>
 
-<div class="post-modal" id="postModal">
-<div class="post-box" id="postContent"></div>
-</div>
+  <div id="mediaModal" class="modal">
+    <div class="modal-box modal-box-lg">
+      <button class="close-btn" onclick="closeMedia()">×</button>
+      <div class="modal-head">
+        <h2>Media library</h2>
+        <p>Izberi slike iz računalnika. Lahko jih vstaviš v vsebino ali nastaviš kot featured.</p>
+      </div>
+      <div class="media-layout">
+        <div class="dropzone">
+          <strong>Naloži slike iz računalnika</strong>
+          <p>Slike se za demo shranijo v brskalnik.</p>
+          <input type="file" accept="image/*" multiple class="input" style="margin-top:14px" onchange="uploadMedia(event)">
+        </div>
+        <div>
+          <div id="mediaGrid"></div>
+        </div>
+      </div>
+    </div>
+  </div>
 
-<div class="lightbox" id="lightbox" onclick="closeLightbox()">
-<img id="lightboxImg">
-</div>
-
-<div class="modal" id="loginModal">
-<div class="modal-box">
-<h3>Admin Login</h3>
-<input id="username" placeholder="Username">
-<input id="password" type="password" placeholder="Password">
-<button onclick="login()">Login</button>
-</div>
-</div>
-
-<script>
-// --- Data & Storage ---
-let posts = JSON.parse(localStorage.getItem('posts')||'[]');
-let comments = JSON.parse(localStorage.getItem('comments')||'{}');
-let page = 1;
-const perPage = 6;
-const isAdmin = localStorage.getItem('adminLogged')==='true';
-
-if(posts.length===0){
-posts=[{
-title:'Weekend in Paris',
-category:'Europe',
-tags:['city','food'],
-images:['https://images.unsplash.com/photo-1502602898657-3e91760cbb34'],
-text:'Full guide to exploring Paris including cafes, museums and walking tours around the Eiffel tower.',
-date:new Date().toLocaleDateString(),
-likes:0
-}];
-}
-
-if(isAdmin) document.getElementById('adminPanel').style.display='block';
-
-// --- Helpers ---
-function savePosts(){ localStorage.setItem('posts',JSON.stringify(posts)); }
-function saveComments(){ localStorage.setItem('comments',JSON.stringify(comments)); }
-function sanitizeHTML(str){ const div=document.createElement('div'); div.textContent=str; return div.innerHTML; }
-
-// --- Render Posts ---
-function renderPosts(list=posts){
-let start=(page-1)*perPage;
-let paginated=list.slice(start,start+perPage);
-const postsDiv=document.getElementById('posts');
-postsDiv.innerHTML='';
-paginated.forEach((p,i)=>{
-  const card=document.createElement('div');
-  card.className='card';
-  card.onclick=()=>openPost(start+i);
-  card.innerHTML=`<img src="${p.images[0]}"><div class="card-content"><h3>${sanitizeHTML(p.title)}</h3><div class="meta">${p.date} • ${sanitizeHTML(p.category||'')}</div><p>${sanitizeHTML(p.text.substring(0,80))}...</p><div class="tags">${p.tags.map(t=>'#'+sanitizeHTML(t)).join(' ')}</div></div>`;
-  
-  if(isAdmin){
-    const delBtn=document.createElement('button');
-    delBtn.textContent='Delete';
-    delBtn.style.cssText='margin-top:8px;padding:4px 8px;background:#e74c3c;color:white;border:none;border-radius:6px;cursor:pointer;font-size:12px';
-    delBtn.onclick=(ev)=>{
-      ev.stopPropagation();
-      if(confirm('Are you sure you want to delete this post?')){
-        posts.splice(start+i,1);
-        savePosts();
-        renderPosts();
-      }
+  <script>
+    const els = {
+      adminPanel: document.getElementById('adminPanel'),
+      navAuth: document.getElementById('navAuth'),
+      loginModal: document.getElementById('loginModal'),
+      postModal: document.getElementById('postModal'),
+      mediaModal: document.getElementById('mediaModal'),
+      loginError: document.getElementById('loginError'),
+      postContent: document.getElementById('postContent'),
+      featuredPreview: document.getElementById('featuredPreview'),
+      mediaGrid: document.getElementById('mediaGrid'),
+      quickPosts: document.getElementById('quickPosts'),
+      titleInput: document.getElementById('title'),
+      categoryInput: document.getElementById('category'),
+      excerptInput: document.getElementById('excerpt'),
+      editorInput: document.getElementById('editor'),
+      userInput: document.getElementById('user'),
+      passInput: document.getElementById('pass'),
+      postsEl: document.getElementById('posts'),
+      pagination: document.getElementById('pagination'),
+      searchInput: document.getElementById('searchInput'),
+      categoryFilter: document.getElementById('categoryFilter'),
+      sortFilter: document.getElementById('sortFilter'),
+      statPosts: document.getElementById('statPosts'),
+      statCategories: document.getElementById('statCategories'),
+      statMedia: document.getElementById('statMedia'),
+      statVisible: document.getElementById('statVisible')
     };
-    card.querySelector('.card-content').appendChild(delBtn);
-  }
 
-  postsDiv.appendChild(card);
-});
-renderPagination(list.length);
-renderTagFilters();
-}
+    let editIndex = null;
+    let currentPage = 1;
+    const postsPerPage = 6;
+    let savedRange = null;
+    let resizeState = null;
 
-// --- Pagination ---
-function renderPagination(total){
-const pagination=document.getElementById('pagination');
-pagination.innerHTML='';
-const totalPages=Math.ceil(total/perPage);
-for(let i=1;i<=totalPages;i++){
-  const btn=document.createElement('button');
-  btn.textContent=i;
-  if(i===page) btn.style.background='#1a5cd1';
-  btn.onclick=()=>{ page=i; renderPosts(); };
-  pagination.appendChild(btn);
-}
-}
+    function getMedia(){
+      return JSON.parse(localStorage.getItem('media') || '[]');
+    }
 
-// --- Tag Filters ---
-function renderTagFilters(){
-const allTags=[...new Set(posts.flatMap(p=>p.tags))];
-const box=document.getElementById('tagFilters');
-box.innerHTML='';
-allTags.forEach(tag=>{
-  const b=document.createElement('button');
-  b.textContent='#'+tag;
-  b.onclick=()=>{ page=1; renderPosts(posts.filter(p=>p.tags.includes(tag))); };
-  box.appendChild(b);
-});
-}
+    function setMedia(media){
+      localStorage.setItem('media', JSON.stringify(media));
+    }
 
-// --- Post Modal ---
-function openPost(i){
-const p=posts[i];
-const gallery=p.images.map(img=>`<img src="${img}" onclick="openLightbox('${img}')">`).join('');
-const postComments=(comments[i]||[]).map(c=>`<div class='comment'>${sanitizeHTML(c)}</div>`).join('');
-document.getElementById('postContent').innerHTML=`<h1>${sanitizeHTML(p.title)}</h1><div class='meta'>${p.date} • ${sanitizeHTML(p.category||'')}</div><img src='${p.images[0]}' style='width:100%;border-radius:10px;margin:20px 0'><p>${p.text}</p><div class='gallery'>${gallery}</div><div class='tags'>${p.tags.map(t=>'#'+sanitizeHTML(t)).join(' ')}</div><div class='post-comments'><h3>Comments</h3><form onsubmit="addComment(event,${i})"><input id='cname' placeholder='Name' required><input id='ctext' placeholder='Comment' required><button>Add comment</button></form>${postComments}</div><button onclick="closePost()">Close</button>`;
-document.getElementById('postModal').style.display='block';
-}
+    function getMediaItemById(id){
+      return getMedia().find(item => item.id === id) || null;
+    }
 
-// --- Comments ---
-function addComment(e,i){ e.preventDefault(); const name=document.getElementById('cname').value; const text=document.getElementById('ctext').value; if(!comments[i]) comments[i]=[]; comments[i].push(`${name}: ${text}`); saveComments(); openPost(i); }
-function closePost(){ document.getElementById('postModal').style.display='none'; }
+    function getFeaturedSrc(post){
+      if (!post) return '';
+      if (post.featuredId){
+        return getMediaItemById(post.featuredId)?.data || '';
+      }
+      return post.featured || '';
+    }
 
-// --- Lightbox ---
-function openLightbox(src){ const lb=document.getElementById('lightbox'); lb.style.display='flex'; document.getElementById('lightboxImg').src=src; }
-function closeLightbox(){ document.getElementById('lightbox').style.display='none'; }
+    function escapeHtml(str=''){
+      return String(str)
+        .replaceAll('&','&amp;')
+        .replaceAll('<','&lt;')
+        .replaceAll('>','&gt;')
+        .replaceAll('"','&quot;')
+        .replaceAll("'",'&#039;');
+    }
 
-// --- Editor Toolbar & Add Post ---
-const editor=document.getElementById('editor');
-function format(cmd,value=null){ document.execCommand(cmd,false,value); }
-function addLink(){ const url=prompt('Enter URL'); if(url) document.execCommand('createLink',false,url); }
-function addImageFromURL(){ const url=prompt('Enter image URL'); if(!url) return; const img=document.createElement('img'); img.src=url; makeImageInteractive(img); editor.appendChild(img); }
+    function sanitizeHtml(html=''){
+      return String(html)
+        .replace(/<script[\s\S]*?>[\s\S]*?<\/script>/gi,'')
+        .replace(/<iframe[\s\S]*?>[\s\S]*?<\/iframe>/gi,'')
+        .replace(/\son\w+="[^"]*"/gi,'')
+        .replace(/\son\w+='[^']*'/gi,'')
+        .replace(/javascript:/gi,'');
+    }
 
-function makeImageInteractive(img){
-img.style.maxWidth='100%'; img.style.borderRadius='10px'; img.style.margin='10px 0'; img.style.cursor='move'; img.draggable=true;
-img.addEventListener('dragstart',e=>{ e.dataTransfer.setData('text/plain','drag-image'); window.__draggedImage=img; });
-img.addEventListener('dragover',e=>e.preventDefault());
-img.addEventListener('drop',e=>{ e.preventDefault(); const dragged=window.__draggedImage; if(dragged&&dragged!==img) img.parentNode.insertBefore(dragged,img); });
-img.addEventListener('mousedown',e=>{ if(!e.shiftKey) return; e.preventDefault(); const startX=e.clientX,startY=e.clientY,startWidth=img.offsetWidth,startHeight=img.offsetHeight; function onMove(ev){ const dx=ev.clientX-startX,dy=ev.clientY-startY; img.style.width=Math.max(50,startWidth+dx)+'px'; img.style.height=Math.max(50,startHeight+dy)+'px'; } function onUp(){ window.removeEventListener('mousemove',onMove); window.removeEventListener('mouseup',onUp); } window.addEventListener('mousemove',onMove); window.addEventListener('mouseup',onUp); });
-}
+    function stripHtml(html=''){
+      const temp = document.createElement('div');
+      temp.innerHTML = html;
+      return (temp.textContent || temp.innerText || '').trim();
+    }
 
-// Drag & Drop in Editor
-editor.addEventListener('dragover',e=>e.preventDefault());
-editor.addEventListener('drop',e=>{
-e.preventDefault();
-const files=e.dataTransfer.files;
-for(const file of files){
-if(!file.type.startsWith('image/')) continue;
-const reader=new FileReader();
-reader.onload=evt=>{ const img=document.createElement('img'); img.src=evt.target.result; makeImageInteractive(img); editor.appendChild(img); };
-reader.readAsDataURL(file);
-}
-});
+    function formatDate(dateStr){
+      try{
+        return new Date(dateStr).toLocaleDateString('sl-SI', { day:'2-digit', month:'short', year:'numeric' });
+      }catch{ return dateStr; }
+    }
 
-// --- Add Post ---
-function addPost(e){
-e.preventDefault();
-const title=document.getElementById('postTitle').value;
-const category=document.getElementById('postCategory').value;
-const tags=document.getElementById('postTags').value.split(',').map(t=>t.trim()).filter(Boolean);
-const text=editor.innerHTML;
-const files=document.getElementById('postImages').files;
-const images=[];
-if(files.length===0) saveNewPost();
-for(const file of files){
-if(!file.type.startsWith('image/')) continue;
-const reader=new FileReader();
-reader.onload=()=>{
-images.push(reader.result);
-if(images.length===files.length) saveNewPost();
-};
-reader.readAsDataURL(file);
-}
-function saveNewPost(){ posts.unshift({title,category,tags,text,images,date:new Date().toLocaleDateString(),likes:0}); savePosts(); renderPosts(); e.target.reset(); editor.innerHTML=''; }
-}
+    function estimateReadTime(html=''){
+      const words = stripHtml(html).split(/\s+/).filter(Boolean).length;
+      return Math.max(1, Math.ceil(words / 200));
+    }
 
-// --- Search ---
-function searchPosts(q){ q=q.toLowerCase(); renderPosts(posts.filter(p=>p.title.toLowerCase().includes(q)||p.tags.join(' ').toLowerCase().includes(q))); }
+    function scrollToSection(id){
+      document.getElementById(id)?.scrollIntoView({behavior:'smooth', block:'start'});
+    }
 
-// --- Dark Mode ---
-function toggleDark(){ document.body.classList.toggle('dark'); localStorage.setItem('darkMode',document.body.classList.contains('dark')); }
-if(localStorage.getItem('darkMode')==='true') document.body.classList.add('dark');
+    function getPosts(){ return JSON.parse(localStorage.getItem('posts') || '[]'); }
+    function setPosts(posts){ localStorage.setItem('posts', JSON.stringify(posts)); }
+    function isAdmin(){ return localStorage.getItem('admin') === 'true'; }
 
-// --- Admin Login ---
-function openLogin(){ document.getElementById('loginModal').style.display='flex'; }
-function login(){ if(document.getElementById('username').value==='admin' && document.getElementById('password').value==='travel123'){ localStorage.setItem('adminLogged','true'); location.reload(); }else alert('Wrong login'); }
-function logout(){ localStorage.removeItem('adminLogged'); location.reload(); }
+    function saveSelection(){
+      const sel = window.getSelection();
+      if (sel.rangeCount) savedRange = sel.getRangeAt(0).cloneRange();
+    }
 
-// --- Navigation & Menu ---
-function toggleMenu(){ document.getElementById('menu').classList.toggle('open'); }
-function scrollToId(id){ document.getElementById(id).scrollIntoView({behavior:'smooth'}); }
+    function restoreSelection(){
+      if (!savedRange) return;
+      const sel = window.getSelection();
+      sel.removeAllRanges();
+      sel.addRange(savedRange);
+    }
 
-// --- Initial Render ---
-renderPosts();
-window.onclick=e=>{
-if(e.target===document.getElementById('loginModal')) document.getElementById('loginModal').style.display='none';
-if(e.target===document.getElementById('postModal')) document.getElementById('postModal').style.display='none';
-};
-</script>
+    function focusEditor(){
+      els.editorInput.focus();
+      restoreSelection();
+    }
 
+    function formatDoc(command, value = null){
+      focusEditor();
+      document.execCommand(command, false, value);
+      saveSelection();
+    }
+
+    function applyBlock(tag){
+      if (!tag) return;
+      formatDoc('formatBlock', tag);
+    }
+
+    function insertLink(){
+      const url = prompt('Vnesi URL povezave:');
+      if (!url) return;
+      formatDoc('createLink', url);
+    }
+
+    function applyTextSize(size){
+      focusEditor();
+      const selection = window.getSelection();
+      if (!selection.rangeCount || selection.isCollapsed){
+        alert('Označi besedilo, ki mu želiš spremeniti velikost.');
+        return;
+      }
+      const range = selection.getRangeAt(0);
+      const span = document.createElement('span');
+      span.style.fontSize = size;
+      try{
+        range.surroundContents(span);
+      }catch(e){
+        const frag = range.extractContents();
+        span.appendChild(frag);
+        range.insertNode(span);
+      }
+      selection.removeAllRanges();
+      saveSelection();
+    }
+
+    function clearSelectedImages(){
+      els.editorInput.querySelectorAll('.wp-image-wrap.selected').forEach(el => el.classList.remove('selected'));
+    }
+
+    function selectedImageWrap(){
+      return els.editorInput.querySelector('.wp-image-wrap.selected');
+    }
+
+    function setImageAlign(align){
+      const wrap = selectedImageWrap();
+      if (!wrap){
+        alert('Najprej klikni sliko v editorju.');
+        return;
+      }
+      wrap.classList.remove('align-left','align-center','align-right');
+      if (align === 'left') wrap.classList.add('align-left');
+      if (align === 'center') wrap.classList.add('align-center');
+      if (align === 'right') wrap.classList.add('align-right');
+    }
+
+    function setSelectedImageWidth(width){
+      const wrap = selectedImageWrap();
+      if (!wrap){
+        alert('Najprej klikni sliko v editorju.');
+        return;
+      }
+      wrap.style.width = width;
+    }
+
+    function deleteSelectedImage(){
+      const wrap = selectedImageWrap();
+      if (!wrap){
+        alert('Najprej klikni sliko v editorju.');
+        return;
+      }
+      const row = wrap.closest('.wp-image-row');
+      wrap.remove();
+      if (row && row.children.length === 0) row.remove();
+    }
+
+    function createImageWrap(src){
+      return `<span class="wp-image-wrap align-center" style="width:100%;" draggable="true">
+        <img src="${src}" alt="Inserted image">
+        <span class="resize-handle"></span>
+      </span>`;
+    }
+
+    function placeCaretAtStart(el){
+      const range = document.createRange();
+      const sel = window.getSelection();
+      range.selectNodeContents(el);
+      range.collapse(true);
+      sel.removeAllRanges();
+      sel.addRange(range);
+      saveSelection();
+    }
+
+    function insertImageIntoEditor(src){
+      focusEditor();
+
+      const selection = window.getSelection();
+      if (!selection.rangeCount){
+        els.editorInput.focus();
+      }
+
+      const range = selection.rangeCount ? selection.getRangeAt(0) : document.createRange();
+      range.deleteContents();
+
+      const temp = document.createElement('div');
+      temp.innerHTML = createImageWrap(src);
+
+      const wrap = temp.firstElementChild;
+      const paragraph = document.createElement('p');
+      paragraph.innerHTML = '<br>';
+
+      range.insertNode(paragraph);
+      range.insertNode(wrap);
+
+      const br = paragraph.querySelector('br');
+      const newRange = document.createRange();
+      const sel = window.getSelection();
+      newRange.setStartBefore(br);
+      newRange.collapse(true);
+      sel.removeAllRanges();
+      sel.addRange(newRange);
+
+      saveSelection();
+    }
+
+    function getSelectedImageWraps(){
+      return [...els.editorInput.querySelectorAll('.wp-image-wrap.selected')];
+    }
+
+    function makeImageRow(maxCount){
+      const selected = getSelectedImageWraps();
+      if (selected.length < 2){
+        alert('Izberi vsaj 2 sliki v editorju. Označi jih s Ctrl/Cmd + klik.');
+        return;
+      }
+      const items = selected.slice(0, maxCount);
+      const row = document.createElement('div');
+      row.className = 'wp-image-row';
+      items[0].parentNode.insertBefore(row, items[0]);
+      items.forEach(item => {
+        item.classList.remove('align-left','align-center','align-right','selected');
+        item.style.width = '';
+        row.appendChild(item);
+      });
+    }
+
+    function ungroupImageRow(){
+      const wrap = selectedImageWrap();
+      if (!wrap) return;
+      const row = wrap.closest('.wp-image-row');
+      if (!row) return;
+      row.parentNode.insertBefore(wrap, row);
+      [...row.children].forEach(item => {
+        item.classList.add('align-center');
+        row.parentNode.insertBefore(item, row);
+      });
+      row.remove();
+    }
+
+    function beginResize(handle, startX){
+      const wrap = handle.parentElement;
+      resizeState = {
+        wrap,
+        startX,
+        startWidth: wrap.getBoundingClientRect().width,
+        parentWidth: wrap.parentElement.getBoundingClientRect().width || els.editorInput.getBoundingClientRect().width
+      };
+      document.body.style.userSelect = 'none';
+    }
+
+    function duringResize(clientX){
+      if (!resizeState) return;
+      const delta = clientX - resizeState.startX;
+      const newWidth = Math.max(120, resizeState.startWidth + delta);
+      const percent = Math.min(100, Math.max(15, (newWidth / resizeState.parentWidth) * 100));
+      resizeState.wrap.style.width = percent.toFixed(2) + '%';
+    }
+
+    function endResize(){
+      resizeState = null;
+      document.body.style.userSelect = '';
+    }
+
+    function ensureDemoContent(){
+      const posts = getPosts();
+      if (!posts.length){
+        setPosts([
+          {
+            title:'Dolomiti v 3 dneh',
+            category:'Guides',
+            excerpt:'Kratek vodič za nepozaben gorski roadtrip z razgledi in top točkami.',
+            featured:'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1200&q=80',
+            text:'<h2>Zakaj Dolomiti?</h2><p>Dolomiti so odlična izbira za vikend pobeg ali daljši roadtrip. Čakajo te jezera, serpentine in epski razgledi.</p><p>V 3 dneh lahko vidiš Lago di Braies, Secedo in večerni sunset spot nad Cortino d’Ampezzo.</p>',
+            createdAt: new Date().toISOString()
+          },
+          {
+            title:'Pariz za prvi obisk',
+            category:'City Break',
+            excerpt:'Klasičen itinerar za 2 dni, brez stresa in z najboljšimi foto točkami.',
+            featured:'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=1200&q=80',
+            text:'<p>Pariz je idealen za prvi city break. Začni pri Montmartru, nadaljuj do Louvra in zaključi večer ob Seni.</p>',
+            createdAt: new Date(Date.now()-86400000).toISOString()
+          },
+          {
+            title:'Bali: kje začeti?',
+            category:'Asia',
+            excerpt:'Ubud, Canggu ali Uluwatu? Hitri pregled za lažjo odločitev.',
+            featured:'https://images.unsplash.com/photo-1537996194471-e657df975ab4?auto=format&fit=crop&w=1200&q=80',
+            text:'<p>Bali ponuja zelo različna območja. Če želiš surf in kavarne, izberi Canggu. Če želiš mir in džunglo, Ubud.</p>',
+            createdAt: new Date(Date.now()-172800000).toISOString()
+          },
+          {
+            title:'Santorini ob sončnem zahodu',
+            category:'Europe',
+            excerpt:'Najlepše razgledne točke, bele hiške in ideje za romantičen večer.',
+            featured:'https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?auto=format&fit=crop&w=1200&q=80',
+            text:'<p>Santorini je popoln za počasne sprehode, razglede na kaldero in večerne večerje z razgledom. Oia je klasika, a tudi Fira ponuja čudovite poglede.</p>',
+            createdAt: new Date(Date.now()-259200000).toISOString()
+          },
+          {
+            title:'Islandija za fotografe',
+            category:'Adventure',
+            excerpt:'Slapovi, črne plaže in roadtrip točke za najboljše fotografije.',
+            featured:'https://images.unsplash.com/photo-1504893524553-b855bce32c67?auto=format&fit=crop&w=1200&q=80',
+            text:'<p>Če potuješ po Islandiji z avtom, planiraj postanke pri Skógafoss, Reynisfjari in ledeniški laguni Jökulsárlón. Vreme se hitro spreminja, zato imej plan B.</p>',
+            createdAt: new Date(Date.now()-345600000).toISOString()
+          },
+          {
+            title:'New York v 48 urah',
+            category:'City Break',
+            excerpt:'Hiter, učinkovit plan za prvi obisk mesta, ki nikoli ne spi.',
+            featured:'https://images.unsplash.com/photo-1499092346589-b9b6be3e94b2?auto=format&fit=crop&w=1200&q=80',
+            text:'<p>Začni dan na Top of the Rock, nadaljuj skozi Central Park in popoldne preživi v SoHu ali Brooklynu. Večer zaključi z razgledom na skyline.</p>',
+            createdAt: new Date(Date.now()-432000000).toISOString()
+          }
+        ]);
+      }
+    }
+
+    function updateUI(){
+      els.adminPanel.style.display = isAdmin() ? 'block' : 'none';
+      els.navAuth.innerHTML = isAdmin()
+        ? '<button class="btn btn-primary" onclick="logout()">Logout</button>'
+        : '<button class="btn btn-primary" onclick="openLogin()">Login</button>';
+      refreshCategoryFilter();
+      renderQuickPosts();
+      updateStats();
+      applyFilters();
+    }
+
+    function updateStats(visibleCount = null){
+      const posts = getPosts();
+      const categories = [...new Set(posts.map(p => (p.category || '').trim()).filter(Boolean))];
+      const media = getMedia();
+      els.statPosts.textContent = posts.length;
+      els.statCategories.textContent = categories.length;
+      els.statMedia.textContent = media.length;
+      const visible = visibleCount === null ? Math.min(posts.length, postsPerPage) : Math.min(visibleCount, postsPerPage);
+      els.statVisible.textContent = visible;
+    }
+
+    function refreshCategoryFilter(){
+      const posts = getPosts();
+      const categories = [...new Set(posts.map(p => (p.category || '').trim()).filter(Boolean))].sort((a,b) => a.localeCompare(b,'sl'));
+      const current = els.categoryFilter.value;
+      els.categoryFilter.innerHTML = '<option value="all">Vse kategorije</option>' + categories.map(cat => `<option value="${escapeHtml(cat)}">${escapeHtml(cat)}</option>`).join('');
+      if (categories.includes(current)) els.categoryFilter.value = current;
+    }
+
+    function clearFilters(){
+      els.searchInput.value = '';
+      els.categoryFilter.value = 'all';
+      els.sortFilter.value = 'newest';
+      currentPage = 1;
+      applyFilters();
+    }
+
+    function applyFilters(){
+      const search = els.searchInput.value.trim().toLowerCase();
+      const category = els.categoryFilter.value;
+      const sort = els.sortFilter.value;
+      let posts = [...getPosts()];
+
+      posts = posts.filter(post => {
+        const hay = `${post.title || ''} ${post.excerpt || ''} ${stripHtml(post.text || '')}`.toLowerCase();
+        const matchSearch = !search || hay.includes(search);
+        const matchCategory = category === 'all' || (post.category || '') === category;
+        return matchSearch && matchCategory;
+      });
+
+      posts.sort((a,b) => {
+        if (sort === 'oldest') return new Date(a.createdAt || 0) - new Date(b.createdAt || 0);
+        if (sort === 'title-asc') return (a.title || '').localeCompare(b.title || '', 'sl');
+        if (sort === 'title-desc') return (b.title || '').localeCompare(a.title || '', 'sl');
+        return new Date(b.createdAt || 0) - new Date(a.createdAt || 0);
+      });
+
+      const totalPages = Math.max(1, Math.ceil(posts.length / postsPerPage));
+      if (currentPage > totalPages) currentPage = totalPages;
+      renderPosts(posts, currentPage);
+      renderPagination(posts.length, totalPages);
+      updateStats(posts.length);
+    }
+
+    function renderPosts(posts, page = 1){
+      const start = (page - 1) * postsPerPage;
+      const end = start + postsPerPage;
+      const visiblePosts = posts.slice(start, end);
+      els.postsEl.innerHTML = '';
+
+      if (!visiblePosts.length){
+        els.postsEl.innerHTML = '<div class="empty" style="grid-column:1/-1">Ni zadetkov. Poskusi drugo iskanje ali kategorijo.</div>';
+        return;
+      }
+
+      visiblePosts.forEach(post => {
+        const realIndex = getPosts().findIndex(p => p.createdAt === post.createdAt && p.title === post.title);
+        const card = document.createElement('article');
+        card.className = 'card';
+        card.onclick = () => openPost(realIndex);
+        const excerpt = post.excerpt || stripHtml(post.text).slice(0,110) + (stripHtml(post.text).length > 110 ? '…' : '');
+        card.innerHTML = `
+          <div class="card-media">
+            <img src="${getFeaturedSrc(post) || ''}" alt="${escapeHtml(post.title || 'Blog image')}">
+            ${post.category ? `<div class="chip">${escapeHtml(post.category)}</div>` : ''}
+          </div>
+          <div class="card-body">
+            <div class="meta">
+              <span>${formatDate(post.createdAt)}</span>
+              <span>${estimateReadTime(post.text)} min branja</span>
+            </div>
+            <h3>${escapeHtml(post.title || '')}</h3>
+            <p class="excerpt">${escapeHtml(excerpt)}</p>
+            ${isAdmin() ? `
+              <div class="admin-row">
+                <button class="btn btn-secondary btn-sm" onclick="event.stopPropagation(); loadPostToEditor(${realIndex})">Edit</button>
+                <button class="btn btn-danger btn-sm" onclick="event.stopPropagation(); deletePost(${realIndex})">Delete</button>
+              </div>
+            ` : ''}
+          </div>
+        `;
+        els.postsEl.appendChild(card);
+      });
+    }
+
+    function renderPagination(totalPosts, totalPages){
+      els.pagination.innerHTML = '';
+      if (totalPosts <= postsPerPage) return;
+      for (let i = 1; i <= totalPages; i++){
+        const btn = document.createElement('button');
+        btn.className = i === currentPage ? 'btn btn-primary btn-sm' : 'btn btn-ghost btn-sm';
+        btn.textContent = i;
+        btn.onclick = () => {
+          currentPage = i;
+          applyFilters();
+          document.getElementById('posts')?.scrollIntoView({ behavior:'smooth', block:'start' });
+        };
+        els.pagination.appendChild(btn);
+      }
+    }
+
+    function renderQuickPosts(){
+      const posts = getPosts();
+      els.quickPosts.innerHTML = '';
+      if (!posts.length){
+        els.quickPosts.innerHTML = '<div class="empty">Ni še objav.</div>';
+        return;
+      }
+      posts.slice().sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt)).forEach(post => {
+        const realIndex = getPosts().findIndex(p => p.createdAt === post.createdAt && p.title === post.title);
+        const item = document.createElement('div');
+        item.className = 'mini-post';
+        item.onclick = () => loadPostToEditor(realIndex);
+        item.innerHTML = `
+          <img src="${getFeaturedSrc(post) || ''}" alt="${escapeHtml(post.title)}">
+          <div>
+            <strong>${escapeHtml(post.title)}</strong>
+            <span>${escapeHtml(post.category || 'Brez kategorije')} · ${formatDate(post.createdAt)}</span>
+          </div>
+        `;
+        els.quickPosts.appendChild(item);
+      });
+    }
+
+    function openLogin(){ els.loginModal.style.display = 'flex'; }
+    function closeLogin(){
+      els.loginModal.style.display = 'none';
+      els.loginError.textContent = '';
+      els.userInput.value = '';
+      els.passInput.value = '';
+    }
+
+    function doLogin(){
+      const u = els.userInput.value.trim();
+      const p = els.passInput.value;
+      if (u === 'admin' && p === 'travel123'){
+        localStorage.setItem('admin','true');
+        closeLogin();
+        updateUI();
+        scrollToSection('adminSection');
+      } else {
+        els.loginError.textContent = 'Napačni podatki za prijavo.';
+      }
+    }
+
+    function logout(){
+      localStorage.removeItem('admin');
+      resetEditor();
+      updateUI();
+    }
+
+    function normalizeImageWraps(){
+      els.editorInput.querySelectorAll('.wp-image-wrap').forEach(wrap => {
+        wrap.setAttribute('draggable', 'true');
+        if (!wrap.querySelector('.resize-handle')){
+          const handle = document.createElement('span');
+          handle.className = 'resize-handle';
+          wrap.appendChild(handle);
+        }
+      });
+    }
+
+    function loadPostToEditor(index){
+      if (!isAdmin()) return;
+      const posts = getPosts();
+      const post = posts[index];
+      if (!post) return;
+      els.titleInput.value = post.title || '';
+      els.categoryInput.value = post.category || '';
+      els.excerptInput.value = post.excerpt || '';
+      els.editorInput.innerHTML = post.text || '';
+      normalizeImageWraps();
+      if (post.featuredId) setFeaturedById(post.featuredId); else setFeatured(post.featured || '');
+      editIndex = index;
+      scrollToSection('adminSection');
+    }
+
+    function resetEditor(){
+      editIndex = null;
+      els.titleInput.value = '';
+      els.categoryInput.value = '';
+      els.excerptInput.value = '';
+      els.editorInput.innerHTML = '';
+      clearFeatured();
+      els.featuredPreview.dataset.featuredId = '';
+    }
+
+    function setFeatured(src){
+      if (!src){ clearFeatured(); return; }
+      els.featuredPreview.innerHTML = `<img src="${src}" alt="Featured image">`;
+      els.featuredPreview.dataset.featuredId = '';
+    }
+
+    function setFeaturedById(id){
+      const item = getMediaItemById(id);
+      if (!item) return;
+      els.featuredPreview.innerHTML = `<img src="${item.data}" alt="Featured image">`;
+      els.featuredPreview.dataset.featuredId = id;
+    }
+
+    function clearFeatured(){
+      els.featuredPreview.innerHTML = '<div class="featured-placeholder">Ni izbrane slike</div>';
+    }
+
+    function savePost(){
+      if (!isAdmin()) {
+        alert('Najprej se prijavi kot admin.');
+        return;
+      }
+
+      clearSelectedImages();
+      normalizeImageWraps();
+
+      const title = els.titleInput.value.trim();
+      const category = els.categoryInput.value.trim();
+      const excerpt = els.excerptInput.value.trim();
+      const text = sanitizeHtml(els.editorInput.innerHTML.trim());
+      const featured = els.featuredPreview.querySelector('img')?.src || '';
+      const featuredId = els.featuredPreview.dataset.featuredId || '';
+      const hasText = !!stripHtml(text);
+      const hasImage = text.includes('<img');
+
+      if (!title) {
+        alert('Vnesi naslov objave.');
+        return;
+      }
+      if (!hasText && !hasImage) {
+        alert('Vnesi vsebino objave ali dodaj sliko.');
+        return;
+      }
+
+      const posts = getPosts();
+      const data = {
+        title, category, excerpt, text, featured, featuredId,
+        createdAt: editIndex !== null ? (posts[editIndex]?.createdAt || new Date().toISOString()) : new Date().toISOString()
+      };
+
+      try{
+        if (editIndex !== null) posts[editIndex] = data;
+        else posts.unshift(data);
+
+        setPosts(posts);
+        resetEditor();
+        currentPage = 1;
+        updateUI();
+        scrollToSection('blogSection');
+        alert('Objava je uspešno shranjena.');
+      }catch(error){
+        console.error(error);
+        alert('Shranjevanje ni uspelo. Najpogosteje je težava prevelika slika v browser storage. Poskusi manjšo sliko ali izbriši nekaj slik iz Media Library.');
+      }
+    }
+
+    function deletePost(index){
+      if (!isAdmin()) return;
+      const posts = getPosts();
+      const post = posts[index];
+      if (!post) return;
+      if (!confirm(`Izbrišem objavo "${post.title}"?`)) return;
+      posts.splice(index,1);
+      setPosts(posts);
+      if (editIndex === index) resetEditor();
+      updateUI();
+    }
+
+    function openPost(index){
+      const post = getPosts()[index];
+      if (!post) return;
+      els.postContent.innerHTML = `
+        <article class="post-shell">
+          <div class="post-cover">${getFeaturedSrc(post) ? `<img src="${getFeaturedSrc(post)}" alt="${escapeHtml(post.title)}">` : ''}</div>
+          <div class="post-body">
+            <div class="post-meta">
+              ${post.category ? `<span class="pill">${escapeHtml(post.category)}</span>` : ''}
+              <span>${formatDate(post.createdAt)}</span>
+              <span>${estimateReadTime(post.text)} min branja</span>
+            </div>
+            <h1>${escapeHtml(post.title)}</h1>
+            ${post.excerpt ? `<p style="font-size:1.06rem;color:var(--muted);margin-bottom:22px">${escapeHtml(post.excerpt)}</p>` : ''}
+            <div class="blog-content">${sanitizeHtml(post.text)}</div>
+          </div>
+        </article>
+      `;
+      els.postModal.style.display = 'flex';
+    }
+
+    function closePost(){ els.postModal.style.display = 'none'; }
+    function openMedia(){ els.mediaModal.style.display = 'flex'; renderMedia(); }
+    function closeMedia(){ els.mediaModal.style.display = 'none'; }
+
+    function compressImage(file, maxSize = 1400, quality = 0.78){
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = e => {
+          const img = new Image();
+          img.onload = () => {
+            let { width, height } = img;
+            if (width > height && width > maxSize){
+              height = Math.round(height * (maxSize / width));
+              width = maxSize;
+            } else if (height >= width && height > maxSize){
+              width = Math.round(width * (maxSize / height));
+              height = maxSize;
+            }
+
+            const canvas = document.createElement('canvas');
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, width, height);
+
+            const mime = file.type === 'image/png' ? 'image/png' : 'image/jpeg';
+            const data = canvas.toDataURL(mime, mime === 'image/png' ? 0.92 : quality);
+            resolve(data);
+          };
+          img.onerror = reject;
+          img.src = e.target.result;
+        };
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+    }
+
+    async function uploadMedia(event){
+      const files = [...(event.target.files || [])];
+      if (!files.length) return;
+
+      const media = getMedia();
+
+      for (const file of files){
+        if (!file.type.startsWith('image/')) continue;
+        try{
+          const data = await compressImage(file);
+          media.unshift({
+            id: 'm_' + Date.now() + '_' + Math.random().toString(36).slice(2,8),
+            name: file.name,
+            data
+          });
+        }catch(error){
+          console.error(error);
+          alert('Ena od slik se ni uspešno pripravila.');
+        }
+      }
+
+      try{
+        setMedia(media);
+        renderMedia();
+        updateUI();
+      }catch(error){
+        console.error(error);
+        alert('Shranjevanje slik ni uspelo. Poskusi manjše slike ali izbriši stare slike iz Media Library.');
+      }
+
+      event.target.value = '';
+    }
+
+    function renderMedia(){
+      const media = getMedia();
+      els.mediaGrid.innerHTML = '';
+
+      if (!media.length){
+        els.mediaGrid.innerHTML = '<div class="empty">Ni še naloženih slik.</div>';
+        return;
+      }
+
+      const topBar = document.createElement('div');
+      topBar.style.gridColumn = '1/-1';
+      topBar.style.display = 'flex';
+      topBar.style.justifyContent = 'flex-end';
+      topBar.style.marginBottom = '6px';
+      topBar.innerHTML = '<button class="btn btn-danger btn-sm">Izbriši vse slike</button>';
+      topBar.querySelector('button').onclick = () => {
+        if (!confirm('Izbrišem vse slike iz Media Library?')) return;
+        localStorage.removeItem('media');
+        renderMedia();
+        updateUI();
+      };
+      els.mediaGrid.appendChild(topBar);
+
+      media.forEach((item, index) => {
+        const src = item.data;
+        const card = document.createElement('div');
+        card.className = 'media-card';
+        card.innerHTML = `
+          <img src="${src}" alt="${item.name || 'Media'}">
+          <div class="media-actions" style="display:grid;grid-template-columns:1fr;gap:8px;">
+            <button class="btn btn-secondary btn-sm">Insert</button>
+            <button class="btn btn-primary btn-sm">Featured</button>
+            <button class="btn btn-danger btn-sm">Delete</button>
+          </div>
+        `;
+
+        const buttons = card.querySelectorAll('button');
+        card.querySelector('img').onclick = () => insertImageIntoEditor(src);
+
+        buttons[0].onclick = (e) => {
+          e.stopPropagation();
+          insertImageIntoEditor(src);
+        };
+
+        buttons[1].onclick = (e) => {
+          e.stopPropagation();
+          setFeaturedById(item.id);
+        };
+
+        buttons[2].onclick = (e) => {
+          e.stopPropagation();
+          deleteMedia(index);
+        };
+
+        els.mediaGrid.appendChild(card);
+      });
+    }
+
+    function deleteMedia(index){
+      const media = getMedia();
+      const item = media[index];
+      if (!item) return;
+      if (!confirm('Izbrišem izbrano sliko?')) return;
+
+      media.splice(index,1);
+      setMedia(media);
+
+      const posts = getPosts().map(post => {
+        if (post.featuredId === item.id){
+          post.featuredId = '';
+          post.featured = '';
+        }
+        return post;
+      });
+      setPosts(posts);
+
+      if (els.featuredPreview.dataset.featuredId === item.id){
+        clearFeatured();
+        els.featuredPreview.dataset.featuredId = '';
+      }
+
+      renderMedia();
+      updateUI();
+    }
+
+    els.editorInput.addEventListener('mouseup', saveSelection);
+    els.editorInput.addEventListener('keyup', saveSelection);
+    els.editorInput.addEventListener('mouseleave', saveSelection);
+
+    els.editorInput.addEventListener('click', (e) => {
+      const wrap = e.target.closest('.wp-image-wrap');
+
+      if (!wrap){
+        clearSelectedImages();
+        saveSelection();
+        return;
+      }
+
+      if (e.ctrlKey || e.metaKey){
+        wrap.classList.toggle('selected');
+      } else {
+        clearSelectedImages();
+        wrap.classList.add('selected');
+      }
+
+      saveSelection();
+    });
+
+    els.editorInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && selectedImageWrap()){
+        e.preventDefault();
+        const wrap = selectedImageWrap();
+        const p = document.createElement('p');
+        p.innerHTML = '<br>';
+        if (wrap.nextSibling) wrap.parentNode.insertBefore(p, wrap.nextSibling);
+        else wrap.parentNode.appendChild(p);
+        clearSelectedImages();
+        placeCaretAtStart(p);
+      }
+    });
+
+    els.editorInput.addEventListener('keydown', (e) => {
+      if ((e.key === 'Delete' || e.key === 'Backspace') && selectedImageWrap()){
+        e.preventDefault();
+        deleteSelectedImage();
+      }
+    });
+
+    els.editorInput.addEventListener('dragstart', (e) => {
+      const wrap = e.target.closest('.wp-image-wrap');
+      if (!wrap) return;
+      clearSelectedImages();
+      wrap.classList.add('selected', 'dragging');
+      e.dataTransfer.effectAllowed = 'move';
+      e.dataTransfer.setData('text/plain', 'image');
+    });
+
+    els.editorInput.addEventListener('dragend', () => {
+      els.editorInput.querySelectorAll('.wp-image-wrap.dragging').forEach(el => el.classList.remove('dragging'));
+    });
+
+    els.editorInput.addEventListener('dragover', (e) => {
+      if (els.editorInput.querySelector('.wp-image-wrap.dragging')) e.preventDefault();
+    });
+
+    els.editorInput.addEventListener('drop', (e) => {
+      const dragging = els.editorInput.querySelector('.wp-image-wrap.dragging');
+      if (!dragging) return;
+      e.preventDefault();
+
+      const targetWrap = e.target.closest('.wp-image-wrap');
+      if (targetWrap && targetWrap !== dragging){
+        const rect = targetWrap.getBoundingClientRect();
+        const placeAfter = e.clientX > rect.left + rect.width / 2 || e.clientY > rect.top + rect.height / 2;
+        if (placeAfter) targetWrap.after(dragging);
+        else targetWrap.before(dragging);
+      } else {
+        const row = e.target.closest('.wp-image-row');
+        if (row && row !== dragging.parentElement){
+          row.appendChild(dragging);
+        } else {
+          els.editorInput.appendChild(dragging);
+        }
+      }
+
+      dragging.classList.remove('dragging');
+    });
+
+    document.addEventListener('mousedown', (e) => {
+      if (e.target.classList.contains('resize-handle')){
+        e.preventDefault();
+        clearSelectedImages();
+        e.target.parentElement.classList.add('selected');
+        beginResize(e.target, e.clientX);
+      }
+    });
+
+    document.addEventListener('mousemove', (e) => {
+      if (resizeState) duringResize(e.clientX);
+    });
+
+    document.addEventListener('mouseup', () => {
+      if (resizeState) endResize();
+    });
+
+    window.addEventListener('keydown', e => {
+      if (e.key === 'Escape'){
+        closeLogin(); closePost(); closeMedia();
+      }
+    });
+
+    window.addEventListener('click', e => {
+      if (e.target === els.loginModal) closeLogin();
+      if (e.target === els.postModal) closePost();
+      if (e.target === els.mediaModal) closeMedia();
+    });
+
+    ensureDemoContent();
+    updateUI();
+  </script>
 </body>
-
 </html>
